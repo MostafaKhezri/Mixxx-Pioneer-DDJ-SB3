@@ -1,5 +1,7 @@
 var PioneerDDJSB3 = {};
-//var PioneerDDJSB3 = {};
+// The SysEx message to send to the controller to force the midi controller
+// to send the status of every item on the control surface.
+var ControllerStatusSysex = [0xF0, 0x00, 0x20, 0x7F, 0x03, 0x01, 0xF7];
 
 ///////////////////////////////////////////////////////////////
 //                       USER OPTIONS                        //
@@ -187,7 +189,12 @@ PioneerDDJSB3.init = function (id) {
     }
 
     // request the positions of the knobs and faders from the controller
-    midi.sendShortMsg(0x9B, 0x09, 0x7f);
+    // midi.sendShortMsg(0x9B, 0x09, 0x7f);
+	
+	// After midi controller receive this Outbound Message request SysEx Message,
+	// midi controller will send the status of every item on the
+	// control surface. (Mixxx will be initialized with current values)
+	midi.sendSysexMsg(ControllerStatusSysex, ControllerStatusSysex.length);
 };
 
 PioneerDDJSB3.Deck = function (deckNumber) {
